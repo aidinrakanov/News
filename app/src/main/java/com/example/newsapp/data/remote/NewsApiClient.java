@@ -20,8 +20,8 @@ public class NewsApiClient implements INewsApiClient {
      public NewsApi client = retrofit.create(NewsApi.class);
 
     @Override
-    public void getNews(String language, String apiKey, final NewsCallBack callback) {
-        Call<News> call = client.getNews(language, apiKey);
+    public void getNews(String language, String apiKey, int page, int items, final NewsCallBack callback) {
+        Call<News> call = client.getNews(language, apiKey, page, items);
         call.enqueue(new Callback<News>() {
             @Override
             public void onResponse(Call<News> call, Response<News> response) {
@@ -44,7 +44,9 @@ public class NewsApiClient implements INewsApiClient {
         @GET("v2/top-headlines")
         Call<News> getNews(
                 @Query("country") String language,
-                @Query("apiKey") String apiKey);
+                @Query("apiKey") String apiKey,
+                @Query("page") int page,
+                @Query("items") int items);
 
     }
 }

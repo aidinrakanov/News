@@ -1,5 +1,7 @@
 package com.example.newsapp.models;
 
+import androidx.room.Entity;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,6 +19,8 @@ import java.util.Map;
         "totalResults",
         "articles"
 })
+
+@Entity(tableName = "news")
 public class News {
 
     @JsonProperty("status")

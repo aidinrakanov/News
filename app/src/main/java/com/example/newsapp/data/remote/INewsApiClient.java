@@ -8,6 +8,7 @@ import java.util.List;
 public interface INewsApiClient {
 
     void getNews (String language, String apiKey,
+                  int page, int items,
                   NewsCallBack callback);
 
     interface NewsCallBack extends IBaseCallback<List<Article>>{

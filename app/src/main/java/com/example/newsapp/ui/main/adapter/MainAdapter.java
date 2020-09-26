@@ -66,7 +66,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
         public void onBind(Article article) {
             title.setText(article.getTitle());
-            desc.setText(article.getDescription());
+            desc.setText(Html.fromHtml(article.getDescription()));
             Glide.with(image.getContext()).load(article.getUrlToImage()).into(image);
         }
     }

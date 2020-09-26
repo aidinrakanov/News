@@ -1,5 +1,9 @@
 package com.example.newsapp.models;
 
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,7 +27,22 @@ import java.util.Map;
         "publishedAt",
         "content"
 })
+@Entity(tableName = "article")
 public class Article implements Serializable {
+
+
+    @PrimaryKey(autoGenerate = true)
+    private  int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Ignore
 
     @JsonProperty("source")
     private Source source;
@@ -41,8 +60,8 @@ public class Article implements Serializable {
     private String publishedAt;
     @JsonProperty("content")
     private String content;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+//    @JsonIgnore
+//    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("source")
     public Source getSource() {
@@ -124,14 +143,14 @@ public class Article implements Serializable {
         this.content = content;
     }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
+//    @JsonAnyGetter
+//    public Map<String, Object> getAdditionalProperties() {
+//        return this.additionalProperties;
+//    }
+//
+//    @JsonAnySetter
+//    public void setAdditionalProperty(String name, Object value) {
+//        this.additionalProperties.put(name, value);
+//    }
 
 }

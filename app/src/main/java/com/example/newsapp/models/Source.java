@@ -1,5 +1,7 @@
 package com.example.newsapp.models;
 
+import androidx.room.PrimaryKey;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,6 +20,7 @@ import java.util.Map;
         "name"
 })
 public class Source implements Serializable {
+
 
     @JsonProperty("id")
     private String id;
