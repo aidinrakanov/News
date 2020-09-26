@@ -14,11 +14,6 @@ public class NewsStorage implements INewsStorage {
         this.dao = dao;
     }
 
-
-    public void saveNews(Article article){
-        dao.insert(article);
-    }
-
     public List<Article> getAll(){
         return dao.getAll();
     }
