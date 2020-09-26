@@ -33,15 +33,6 @@ public class Article implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private  int id;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     @Ignore
 
     @JsonProperty("source")
@@ -142,6 +133,10 @@ public class Article implements Serializable {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 
 //    @JsonAnyGetter
 //    public Map<String, Object> getAdditionalProperties() {

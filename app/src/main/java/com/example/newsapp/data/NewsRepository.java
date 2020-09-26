@@ -13,9 +13,9 @@ public class NewsRepository implements INewsApiClient, INewsStorage{
 
 
     private INewsApiClient newsApiClient;
-
     private INewsStorage iNewsStorage;
     private NewsDao newsDao;
+
     public NewsRepository(INewsApiClient newsApiClient, INewsStorage iNewsStorage, NewsDao newsDao) {
         this.newsApiClient = newsApiClient;
         this.iNewsStorage = iNewsStorage;
@@ -39,11 +39,6 @@ public class NewsRepository implements INewsApiClient, INewsStorage{
     }
     @Override
     public LiveData<List<Article>> getAllLive() {
-        return newsDao.getAllLive();
-    }
-
-    @Override
-    public List<Article> getAll() {
-        return newsDao.getAll();
+        return iNewsStorage.getAllLive();
     }
 }

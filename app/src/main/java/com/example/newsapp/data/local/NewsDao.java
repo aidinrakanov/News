@@ -20,6 +20,9 @@ public interface NewsDao {
 
     @Query("SELECT * FROM article")
     LiveData<List<Article>> getAllLive();
+    
+    @Query("DELETE FROM article")
+    void deleteAll();
 
     @Insert
     void insert(Article article);

@@ -9,6 +9,5 @@ import java.util.List;
 public interface INewsStorage {
     LiveData<List<Article>> getAllLive();
 
-    List<Article> getAll();
 
 }

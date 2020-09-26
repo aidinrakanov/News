@@ -25,6 +25,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         this.list = list;
         notifyDataSetChanged();
     }
+    public void updateAdapter(List<Article> updatelist) {
+        this.list = list;
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override

@@ -3,6 +3,7 @@ package com.example.newsapp.ui.main;
 import android.os.Handler;
 import android.widget.ProgressBar;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -18,10 +19,17 @@ public class MainViewModel extends ViewModel {
 
 
     MutableLiveData<List<Article>> newsLive = new MutableLiveData<>();
+    MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    LiveData<List<Article>> listLiveData = App.storage.getAllLive();
+
     List<Article> newsList;
 
+    void setIsLoading(){
+        isLoading.setValue(true);
+    }
+
     void getData(int page, int items) {
-        App.repository.getNews("ru", "34d3aa9ece5648a188062fe1b24c84fd", page, items,
+        App.repository.getNews("ru", "e9f0e3118ad44e7c985b758271b4ebdb", page, items,
                 new INewsApiClient.NewsCallBack() {
                     @Override
                     public void onSuccess(List<Article> result) {

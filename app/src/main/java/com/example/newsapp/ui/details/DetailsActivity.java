@@ -37,11 +37,11 @@ public class DetailsActivity extends AppCompatActivity {
 
             if (getIntent() != null) {
                 Article article = (Article) getIntent().getSerializableExtra("position");
-                if (article != null) {
-                    dTitle.setText(article.getTitle());
+                assert article != null;
+                dTitle.setText(article.getTitle());
                     dDesc.setText(article.getDescription());
                     Glide.with(dImage.getContext()).load(article.getUrlToImage()).into(dImage);
-                }
+
             }
         }
     }

@@ -31,6 +31,7 @@ public class App extends Application {
                 .allowMainThreadQueries()
                 .build();
         storage = new NewsStorage(database.dao());
+
         repository = new NewsRepository(iNewsApiClient, storage, database.dao());
     }
 }

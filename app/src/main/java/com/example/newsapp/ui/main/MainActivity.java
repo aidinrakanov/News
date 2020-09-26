@@ -7,12 +7,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.example.newsapp.App;
 import com.example.newsapp.R;
 import com.example.newsapp.models.Article;
 import com.example.newsapp.ui.details.DetailsActivity;
@@ -43,10 +47,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         progressBar = findViewById(R.id.main_progress);
         putData();
+        getData();
         paging();
         swipe();
-
-
+        mViewModel.setIsLoading();
 
         mViewModel.getData(page, items);
         mViewModel.newsLive.observe(this, result -> {
@@ -75,15 +79,41 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void getData() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
+            App.database.dao().deleteAll();
+            mViewModel.getData(page, items);
+            mViewModel.newsLive.observe(this, result -> {
+                App.database.dao().insert((Article) result);
+                list.addAll(App.database.dao().getAll());
+                adapter.updateAdapter(list);
+            });
+            Log.d("ololo", "Internet is connected");
+        } else {
+            mViewModel.listLiveData.observe(this, articles -> {
+                if (articles != null) {
+                    adapter.updateAdapter(articles);
+                    list = articles;
+                }
+            });
+            Log.d("ololo", "Internet is disconected");
+        }
+        mViewModel.isLoading.observe(this, aBoolean -> {
+            if (aBoolean) progressBar.setVisibility(View.GONE);
+        });
+    }
+
     private void paging() {
         scrollView = findViewById(R.id.main_scroll);
         scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollX == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
-                    page++; items=+10;
+                if (scrollX == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                    page++;
+                    items = +10;
                     progressBar.setVisibility(View.VISIBLE);
-                    mViewModel.getData(page,items);
+                    mViewModel.getData(page, items);
                 }
             }
         });
@@ -92,9 +122,9 @@ public class MainActivity extends AppCompatActivity {
     private void putData() {
         adapter.setOnItemClickListener(pos -> {
             Intent intent = new Intent(this, DetailsActivity.class);
-                intent.putExtra("position", list.get(pos));
-                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
+            intent.putExtra("position", list.get(pos));
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
         });
     }
 }
