@@ -28,7 +28,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     MainAdapter adapter;
-    ProgressBar progressBar;
+    ProgressBar progressBar, progressBarLoading;
     int page = 1, items = 10;
     NestedScrollView scrollView;
     MainViewModel mViewModel;
@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-
         progressBar = findViewById(R.id.main_progress);
         recycler();
         putData();
@@ -51,9 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void recycler() {
         recyclerView = findViewById(R.id.main_recycler);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                layoutManager.getOrientation());
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         list = new ArrayList<>();
         adapter = new MainAdapter(list);
@@ -75,35 +71,39 @@ public class MainActivity extends AppCompatActivity {
     private void getDataFromDB() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
-            App.database.dao().deleteAll();
+
             mViewModel.getData(page, items);
+            if (App.database.dao().getAll() != null)
+                App.database.dao().deleteAll();
+
             mViewModel.newsLive.observe(this, result -> {
                 App.database.dao().insert(result);
-                list.addAll(App.database.dao().getAll());
+                list.addAll(result);
                 adapter.updateAdapter(list);
                 progressBar.setVisibility(View.GONE);
-            }); } else {
+            });
+        } else {
             mViewModel.listLiveData.observe(this, articles -> {
                 if (articles != null) {
+                    list.addAll(articles);
                     adapter.updateAdapter(articles);
-                    list = articles;
-                    progressBar.setVisibility(View.GONE);
+//                    progressBar.setVisibility(View.GONE);
                 }
             });
         }
-        mViewModel.progressBarLoading.observe(this, aBoolean -> {
-            if (aBoolean) progressBar.setVisibility(View.GONE);
-        });
+//        mViewModel.progressBarLoading.observe(this, aBoolean -> {
+//            if (aBoolean) progressBarLoading.setVisibility(View.GONE);
+//        });
     }
 
     private void paging() {
         scrollView = findViewById(R.id.main_scroll);
         scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener)
                 (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-            if (scrollX == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-                if (list.size() > items){
+            if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                if (items >= list.size()){
                     page++;
-                    items = +10;
+                    items = items +10;
                     progressBar.setVisibility(View.VISIBLE);
                     mViewModel.getData(page,items);
                 }

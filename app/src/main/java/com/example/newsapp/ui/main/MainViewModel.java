@@ -14,7 +14,7 @@ public class MainViewModel extends ViewModel {
 
 
     MutableLiveData<List<Article>> newsLive = new MutableLiveData<>();
-    MutableLiveData<Boolean> progressBarLoading = new MutableLiveData<>();
+//    MutableLiveData<Boolean> progressBarLoading = new MutableLiveData<>();
     LiveData<List<Article>> listLiveData = App.storage.getAllLive();
 
     List<Article> newsList;
@@ -30,7 +30,6 @@ public class MainViewModel extends ViewModel {
                     public void onSuccess(List<Article> result) {
                         newsList = result;
                         newsLive.setValue(newsList);
-                        progressBarLoading.setValue(true);
                     }
 
                     @Override
