@@ -19,12 +19,14 @@ public class MainViewModel extends ViewModel {
     List<Article> newsList;
 
     void getData(int page, int items) {
+
         App.repository.getNews("ru", "e9f0e3118ad44e7c985b758271b4ebdb", page, items,
                 new INewsApiClient.NewsCallBack() {
                     @Override
                     public void onSuccess(List<Article> result) {
                         newsList = result;
                         newsLive.setValue(newsList);
+
                     }
 
                     @Override

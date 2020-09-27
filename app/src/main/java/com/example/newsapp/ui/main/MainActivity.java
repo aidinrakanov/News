@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     MainViewModel mViewModel;
     SwipeRefreshLayout swipeRefreshLayout;
     private List<Article> list = new ArrayList<>();
+    private boolean loading = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,11 +99,11 @@ public class MainActivity extends AppCompatActivity {
         scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener)
                 (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
             if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-                if (itemS >= list.size()) {
+                if (loading) {
                     page ++;
                     itemS =+ 10;
-                    progressBar.setVisibility(View.VISIBLE);
                     mViewModel.getData(page, itemS);
+                    loading = false;
                 }
             }
         });
