@@ -14,14 +14,9 @@ public class MainViewModel extends ViewModel {
 
 
     MutableLiveData<List<Article>> newsLive = new MutableLiveData<>();
-//    MutableLiveData<Boolean> progressBarLoading = new MutableLiveData<>();
     LiveData<List<Article>> listLiveData = App.storage.getAllLive();
 
     List<Article> newsList;
-
-//    void setIsLoading(){
-//        progressBarLoading.setValue(true);
-//    }
 
     void getData(int page, int items) {
         App.repository.getNews("ru", "e9f0e3118ad44e7c985b758271b4ebdb", page, items,

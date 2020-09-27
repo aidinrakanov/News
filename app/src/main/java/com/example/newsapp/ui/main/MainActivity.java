@@ -3,7 +3,6 @@ package com.example.newsapp.ui.main;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -28,8 +27,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     MainAdapter adapter;
-    ProgressBar progressBar, progressBarLoading;
-    int page = 1, items = 10;
+    ProgressBar progressBar;
+    int page = 1, itemS = 10;
     NestedScrollView scrollView;
     MainViewModel mViewModel;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
 
-            mViewModel.getData(page, items);
+            mViewModel.getData(page, itemS);
             if (App.database.dao().getAll() != null)
                 App.database.dao().deleteAll();
 
@@ -80,20 +79,18 @@ public class MainActivity extends AppCompatActivity {
                 App.database.dao().insert(result);
                 list.addAll(result);
                 adapter.updateAdapter(list);
-                progressBar.setVisibility(View.GONE);
+
             });
         } else {
             mViewModel.listLiveData.observe(this, articles -> {
                 if (articles != null) {
                     list.addAll(articles);
                     adapter.updateAdapter(articles);
-//                    progressBar.setVisibility(View.GONE);
+
                 }
             });
         }
-//        mViewModel.progressBarLoading.observe(this, aBoolean -> {
-//            if (aBoolean) progressBarLoading.setVisibility(View.GONE);
-//        });
+      ;
     }
 
     private void paging() {
@@ -101,11 +98,11 @@ public class MainActivity extends AppCompatActivity {
         scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener)
                 (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
             if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-                if (items >= list.size()){
-                    page++;
-                    items = items +10;
+                if (itemS >= list.size()) {
+                    page ++;
+                    itemS =+ 10;
                     progressBar.setVisibility(View.VISIBLE);
-                    mViewModel.getData(page,items);
+                    mViewModel.getData(page, itemS);
                 }
             }
         });
