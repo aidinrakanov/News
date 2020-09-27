@@ -1,7 +1,9 @@
 package com.example.newsapp.ui.main;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +14,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -23,6 +26,7 @@ import com.example.newsapp.ui.main.adapter.MainAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observer;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -46,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         getDataFromDB();
         paging();
         swipe();
+
     }
 
     private void recycler() {
@@ -80,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 App.database.dao().insert(result);
                 list.addAll(result);
                 adapter.updateAdapter(list);
+                progressBar.setVisibility(View.GONE);
 
             });
         } else {
@@ -101,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
             if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
                 if (loading) {
                     page ++;
-                    itemS =+ 10;
+                    itemS = itemS +10;
+                    progressBar.setVisibility(View.VISIBLE);
                     mViewModel.getData(page, itemS);
                     loading = false;
                 }
@@ -117,4 +124,5 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
+
 }
